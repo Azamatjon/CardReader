@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Magnetic Card Reader - Test</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">Magnetic Card Reader</a>
+    </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h2 class="mt-5">Please swipe your card on card reader</h2>
+            <form>
+                <div class="form-inline">
+                    <label for="expected-card-data-length">Expected length of a data</label>
+                    <input type="number" class="form-control mb-2 mr-sm-2" aria-describedby="expectedLengthHelp"  style="margin-left: 10px;" id="expected-card-data-length" value="15" placeholder="Expected length">
+                </div>
+                <small id="expectedLengthHelp" class="form-text text-muted">Please enter expected length of a data on Card</small>
+            </form>
+        </div>
+
+        <div class="col-lg-12 text-center">
+            <h4 class="mt-5">Got DATA FROM CARD:</h4>
+
+            <h1 class="data-from-card" id="data-from-card">
+                -
+            </h1>
+
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript -->
+<script>
+
+    var expectedDataLengthElement = document.getElementById('expected-card-data-length');
+    var showDataElement = document.getElementById('data-from-card');
+
+    document.onkeypress = function(e) {
+        e = e || window.event;
+        var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
+        // store it , in this example, i use localstorage
+        if(localStorage.getItem("card") && localStorage.getItem("card") != 'null') {
+            // append on every keypress
+            localStorage.setItem("card", localStorage.getItem("card") + String.fromCharCode(charCode));
+        } else {
+            // remove localstorage if it takes 300 ms (you can set it)
+            localStorage.setItem("card", String.fromCharCode(charCode));
+            setTimeout(function() {
+                localStorage.removeItem("card");
+            }, 300);
+        }
+
+
+        // when reach on certain length within 300 ms, it is not typed by a human being
+        if(localStorage.getItem("card").length == parseInt(expectedDataLengthElement.value)) {
+            // do some validation
+            console.log(localStorage.getItem("card"));
+            showDataElement.innerHTML = localStorage.getItem("card");
+        }
+    }
+</script>
+</body>
+
+</html>
